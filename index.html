@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A Very Special Podcast</title>
+<style>
+  :root{
+    --sidebar-w: 320px;
+    --bg-main: #1e1f22;      /* dark grey */
+    --bg-sidebar: #000000;   /* black */
+    --text: #ffffff;         /* white */
+    --muted: #c9c9c9;        /* light grey */
+    --accent: #ff6b81;       /* light red/pink for links */
+    --border: #2a2b2f;
+    --card: #242529;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    background: var(--bg-main);
+    color: var(--text);
+    line-height:1.55;
+  }
+
+  /* Layout */
+  .wrap{ display:flex; min-height:100vh; }
+  aside{
+    position:fixed; inset:0 auto 0 0; width:var(--sidebar-w);
+    background:var(--bg-sidebar); color:var(--text);
+    border-right:1px solid #111; padding:28px 22px;
+    display:flex; flex-direction:column; gap:24px;
+  }
+  main{ margin-left:var(--sidebar-w); width:100%; padding:28px 22px 80px; }
+
+  /* Sidebar */
+  .brand{
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+  }
+  .logo-img{
+    width:120px; height:120px; border-radius:50%;
+    border:3px solid var(--text);
+    object-fit:cover; display:block; background:#000;
+  }
+  .showname{
+    font-size:14px; letter-spacing:.12em; opacity:.85; user-select:none;
+    text-align:center;
+  }
+
+  /* Navigation */
+  nav{ width:100%; }
+  nav ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+    display:flex;
+    justify-content:center;
+    gap:0.5em; /* ~3 spaces */
+    flex-wrap:wrap;
+  }
+  nav li{ margin:0; }
+  nav a{
+    color:var(--accent);
+    text-decoration:none;
+    font-weight:600;
+  }
+  nav a:hover, nav a:focus{
+    text-decoration:underline;
+  }
+
+  .textbox{
+    background:#0b0b0b;
+    border:1px solid #111;
+    padding:14px 14px 18px;
+    border-radius:8px;
+  }
+  .textbox p{ margin:0; color:var(--muted) }
+  .fineprint{ color:#7e7e7e; font-size:12px; margin-top:auto }
+
+  /* Main content */
+  .episodes{ display:grid; gap:18px; }
+  .episode{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:18px;
+  }
+  .episode h2{ margin:0 0 6px 0; font-size:20px; line-height:1.35; }
+  .meta{ color:var(--muted); font-size:14px; margin-bottom:10px; }
+  .description{ color:#d9d9d9; }
+  .episode audio{ width:100%; margin-top:12px; }
+
+  .badges{ display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 2px }
+  .badge{ font-size:12px; padding:4px 8px; border:1px solid var(--border); border-radius:999px; color:var(--muted); background:#1a1b1f }
+
+  .notes{ margin-top:10px; display:none }
+  .notes.open{ display:block }
+  .toggle-notes{
+    background:#101114;
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:6px 10px;
+    border-radius:8px;
+    cursor:pointer
+  }
+  .download{ margin-left:8px }
+
+  /* Pagination */
+  .pager{
+    margin-top:22px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+  }
+  .pager button{
+    background:#101114;
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .pager button[disabled]{ opacity:.45; cursor:not-allowed }
+  .pager .num{
+    background:#101114;
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .pager .num.active{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#000;
+  }
+
+  /* Mobile: sidebar becomes a top bar; menu (links) sits on top */
+  @media (max-width: 880px){
+    :root{ --sidebar-w: 100%; }
+    .wrap{ display:block; }
+    aside{
+      position:relative; width:100%;
+      border-right:none; border-bottom:1px solid #111;
+      padding:12px 14px; gap:12px;
+      align-items:center;
+    }
+    main{ margin-left:0; padding:16px 14px 72px; }
+    .logo-img{ width:80px; height:80px; }
+
+    /* Put menu on top */
+    nav{ order:-1; }              /* move nav above logo/title */
+    nav ul{
+      flex-direction:row;
+      gap:12px;
+      justify-content:center;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <aside>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="mailto:patrickxdunn@icloud.com">Contact</a></li>
+          <li><a href="https://www.patreon.com/c/averyspecialpodcast/">Patreon</a></li>
+          <li><a href="https://www.youtube.com/@averyspecialpodcast142">YouTube</a></li>
+        </ul>
+      </nav>
+
+      <div class="brand">
+        <img src="a_very_special_podcast.png" alt="A Very Special Podcast logo" class="logo-img" width="120" height="120">
+        <div class="showname">A VERY SPECIAL PODCAST</div>
+      </div>
+
+      <div class="textbox">
+        <p>The podcast where we watch all your favorite classic TV shows so you don't have to.</p>
+      </div>
+
+      <div class="fineprint">© <span id="yr"></span> A Very Special Podcast</div>
+    </aside>
+
+    <main>
+      <section id="feed" class="episodes" aria-live="polite"></section>
+      <div class="pager" id="pager" aria-label="Pagination" role="navigation"></div>
+    </main>
+  </div>
+
+<script>
+(() => {
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Neocities-friendly (CORS) proxy first
+  const LIBSYN = 'https://feeds.libsyn.com/41056/rss';
+  const SOURCES = [
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(LIBSYN),
+    'https://r.jina.ai/http://feeds.libsyn.com/41056/rss'
+  ];
+  const PAGE_SIZE = 5;
+
+  let items = [];
+  let page = 1;
+
+  async function loadFeed() {
+    let xmlText, lastErr;
+    for (const url of SOURCES){
+      try {
+        const res = await fetch(url, {cache:'no-store'});
+        xmlText = await res.text();
+        if (xmlText) break;
+      } catch (e){ lastErr = e; }
+    }
+    if (!xmlText) throw lastErr || new Error('Could not load feed via proxy.');
+
+    const xml = new DOMParser().parseFromString(xmlText, 'application/xml');
+    if (xml.querySelector('parsererror')) throw new Error('RSS parse failed. Check feed URL.');
+
+    const chTitle = xml.querySelector('channel > title')?.textContent?.trim();
+    if (chTitle) document.title = chTitle + ' — Podcast';
+
+    items = [...xml.querySelectorAll('channel > item')].map(it => {
+      const pick = (sel, attr) =>
+        attr ? it.querySelector(sel)?.getAttribute(attr) || '' : it.querySelector(sel)?.textContent?.trim() || '';
+
+      const rawTitle = pick('title');
+      const pubDate = pick('pubDate');
+      const enclosure = it.querySelector('enclosure')?.getAttribute('url') || '';
+      const description = pick('content\\:encoded') || pick('description') || '';
+      const duration = pick('itunes\\:duration');
+      const epNum = pick('itunes\\:episode');
+
+      const parsed = parseTitle(rawTitle);
+      const number = epNum || parsed.number || '';
+      const displayTitle = buildDisplayTitle(number, parsed.main, parsed.subtitle);
+
+      return {
+        rawTitle, displayTitle, number, pubDate, enclosure, description, duration,
+        categories: [...it.querySelectorAll('category')].map(c => c.textContent.trim()).slice(0,4)
+      };
+    });
+
+    render();
+  }
+
+  // --- Title helpers ---
+  function decodeEntities(str = "") {
+    const doc = new DOMParser().parseFromString(str, "text/html");
+    return doc.documentElement.textContent || "";
+  }
+  function parseTitle(raw=""){
+    let t = decodeEntities(raw).trim();
+    let number = '';
+    let main = t;
+    let subtitle = '';
+
+    const m = t.match(/^#?\s*(\d+)\s*:?\s*(.*)$/);
+    if (m){
+      number = m[1];
+      main = m[2].trim();
+    }
+
+    const splitIdx = main.lastIndexOf(' - ');
+    if (splitIdx > -1){
+      subtitle = main.slice(splitIdx + 3).trim();
+      main = main.slice(0, splitIdx).trim();
+    }
+    subtitle = subtitle.replace(/^["“”]+|["“”]+$/g, '');
+    return { number, main, subtitle };
+  }
+  function buildDisplayTitle(number, main, subtitle){
+    main = main.replace(/\b'\b/g, '’').replace(/(^|[A-Za-z])'([A-Za-z])/g, '$1’$2');
+    let out = number ? `Episode ${number} — ${main}` : main;
+    if (subtitle) out += ` — “${subtitle}”`;
+    return out;
+  }
+
+  // --- Utils ---
+  function fmtDate(str){
+    if(!str) return '';
+    const d = new Date(str);
+    return isNaN(d) ? str : d.toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'});
+  }
+  function fmtDuration(s){
+    if(!s) return '';
+    if (/^\d+$/.test(s)) {
+      const n = parseInt(s,10); const h=Math.floor(n/3600), m=Math.floor((n%3600)/60), sec=n%60;
+      return (h?`${h}:`:'') + `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    }
+    return s;
+  }
+  function sanitizeAllowlist(html){
+    const tmp = document.createElement('div'); tmp.innerHTML = html;
+    tmp.querySelectorAll('script,style,iframe,object,embed').forEach(n=>n.remove());
+    const allowed = ['P','BR','UL','OL','LI','EM','STRONG','B','I','A','H3','H4','H5','BLOCKQUOTE'];
+    const walk = node => {
+      [...node.children].forEach(ch => {
+        if (!allowed.includes(ch.tagName)) {
+          ch.replaceWith(...ch.childNodes);
+        } else {
+          if (ch.tagName === 'A') { ch.target = '_blank'; ch.rel='noopener'; ch.style.color='var(--accent)'; }
+          walk(ch);
+        }
+      });
+    };
+    walk(tmp);
+    return tmp.innerHTML.trim();
+  }
+  function escapeHtml(str){ return str.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+  // --- Render ---
+  function render(){
+    const container = document.getElementById('feed');
+    container.innerHTML = '';
+
+    const totalPages = Math.max(1, Math.ceil(items.length / 5));
+    if (page > totalPages) page = totalPages;
+
+    const start = (page - 1) * 5;
+    const visible = items.slice(start, start + 5);
+
+    for (const ep of visible){
+      const dateStr = fmtDate(ep.pubDate);
+      const durStr = fmtDuration(ep.duration);
+      const notesId = 'notes-' + Math.random().toString(36).slice(2,8);
+
+      const card = document.createElement('article');
+      card.className = 'episode';
+      card.innerHTML = `
+        <header>
+          <h2>${escapeHtml(ep.displayTitle)}</h2>
+          <div class="meta">${[ dateStr ? `${dateStr}` : '', durStr ? `• ${durStr}` : '' ].filter(Boolean).join(' ')}</div>
+          ${ep.categories?.length ? `<div class="badges">${ep.categories.map(c=>`<span class="badge">${escapeHtml(c)}</span>`).join('')}</div>`:''}
+        </header>
+
+        ${ep.enclosure ? `<audio controls preload="none" src="${ep.enclosure}"></audio>` : ''}
+
+        ${ep.description ? `
+          <button class="toggle-notes" aria-expanded="false" aria-controls="${notesId}">Show notes</button>
+          ${ep.enclosure ? `<a class="toggle-notes download" href="${ep.enclosure}" download>Download MP3</a>` : ''}
+          <div id="${notesId}" class="notes">${sanitizeAllowlist(ep.description)}</div>
+        ` : ''}
+      `;
+
+      const btn = card.querySelector('.toggle-notes');
+      const notes = card.querySelector('.notes');
+      if (btn && notes){
+        btn.addEventListener('click', () => {
+          const open = notes.classList.toggle('open');
+          btn.setAttribute('aria-expanded', String(open));
+          btn.textContent = open ? 'Hide notes' : 'Show notes';
+        });
+      }
+      container.appendChild(card);
+    }
+
+    renderPager(totalPages);
+  }
+
+  function renderPager(total){
+    const pager = document.getElementById('pager');
+    pager.innerHTML = '';
+
+    const mk = (label, disabled, cb) => {
+      const b = document.createElement('button'); b.textContent = label; b.disabled = disabled; b.onclick = cb; pager.appendChild(b);
+    };
+    mk('← Prev', page===1, () => { page--; render(); });
+
+    const span = 3, start = Math.max(1, page-span), end = Math.min(total, page+span);
+    for(let i=start;i<=end;i++){
+      const b = document.createElement('button');
+      b.className = 'num' + (i===page ? ' active' : '');
+      b.textContent = i; b.addEventListener('click', ()=>{ page=i; render(); });
+      pager.appendChild(b);
+    }
+    mk('Next →', page===total, () => { page++; render(); });
+  }
+
+  loadFeed().catch(err => {
+    document.getElementById('feed').innerHTML =
+      `<div class="episode"><h2>Couldn’t load the feed</h2>
+        <p class="description">Error: ${escapeHtml(String(err.message || err))}</p>
+        <p class="description">If CORS blocks it, keep the proxies enabled or use your own tiny proxy.</p>
+      </div>`;
+  });
+})();
+</script>
+</body>
+</html>
